@@ -13,7 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrustructure", "Infrustru
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Presentation", "Presentation", "{EE28EA00-EA95-495B-A22C-7B4419616767}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.Presentation.Api", "\\192.168.80.174\Share\Library\src\Library.Presentation.Api\Library.Presentation.Api.csproj", "{727C5EC8-2625-4365-AF8A-DF4A0C453FD3}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Library.Presentation.Api", "D:\Projects\Library\src\Library.Presentation.Api\Library.Presentation.Api.csproj", "{727C5EC8-2625-4365-AF8A-DF4A0C453FD3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Library.Core.Domain", "src\Library.Core.Domain\Library.Core.Domain.csproj", "{093772E4-782E-44FD-85D5-042B88DD19D6}"
 EndProject
