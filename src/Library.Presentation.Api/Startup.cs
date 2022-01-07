@@ -5,9 +5,12 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
 using Library.Infrustracture.Data.SqlServer.Commands.Common;
 using Library.Infrustracture.Data.SqlServer.Queries.Common;
+using Microsoft.Extensions.Caching.StackExchangeRedis;
+using Microsoft.Extensions.Caching.Distributed;
+using Library.Infrustracture.Tools.Cache.Redis;
+using StackExchange.Redis;
 
 namespace Library.Presentation.Api
 {
@@ -22,16 +25,26 @@ namespace Library.Presentation.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddLiparServices(Configuration, nameof(Lipar), nameof(Library));
+            services.AddLiparServices(Configuration, nameof(Lipar), $"{nameof(Library)}.");
 
             services.AddDbContext<LibraryCommandDbContext>(
                 c => c.UseSqlServer(Configuration.GetConnectionString("CommandConnectionString")));
 
             services.AddDbContext<LibraryQueryDbContext>(
                 c => c.UseSqlServer(Configuration.GetConnectionString("QueryConnectionString")));
+
+            services.AddStackExchangeRedisCache(options =>
+            {
+                options.Configuration = "127.0.0.1:6379";
+                options.InstanceName = "master";
+            });
+
+            services.Add(ServiceDescriptor.Singleton<IDistributedCache, RedisCache>());
+
+            services.AddTransient<ICacheProvider, CacheProvider>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
+
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, LiparOptions liparOptions)
         {
             app.AddLiparConfiguration(env, liparOptions);
