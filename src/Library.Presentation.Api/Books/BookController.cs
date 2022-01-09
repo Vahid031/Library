@@ -6,37 +6,53 @@ using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Threading.Tasks;
 using Library.Infrustracture.Tools.Cache.Redis;
-using Microsoft.Extensions.Caching.Distributed;
-using System.Text;
-using StackExchange.Redis;
+using Library.Core.Application.Books.Queries;
+using System.IO.Compression;
+using System.IO;
+using System;
+using Microsoft.AspNetCore.Hosting;
+using System.Linq;
 
 namespace Library.Presentation.Api.Books
 {
     //[ApiVersion("1.0")]
+    [Route("api/[controller]")]
     public class BookController : BaseController
     {
         private readonly ILogger<BookController> logger;
         private readonly IJson json;
         private readonly ICacheProvider cache;
+        private readonly IHostingEnvironment env;
 
-        public BookController(ILogger<BookController> logger, IJson json, ICacheProvider cache)
+        public BookController(ILogger<BookController> logger, IJson json, ICacheProvider cache, IHostingEnvironment env)
         {
             this.logger = logger;
             this.json = json;
             this.cache = cache;
+            this.env = env;
         }
+
+        [HttpGet("sampleFile")]
+        public async Task<IActionResult> SampleFile([FromQuery] SampleFileQuery query)
+        {
+            Stream memoryStream = await mediator.Send(query);
+
+            return new FileStreamResult(memoryStream, "application/octet-stream")
+            {
+                FileDownloadName = "Sample.xlsx"
+            };
+        }
+
+        [HttpPost("upload")]
+        [Consumes("multipart/form-data")]
+        public async Task<IActionResult> Upload([FromForm] UploadBookCommand command)
+        {
+            return await SendAsync(command, HttpStatusCode.Created);
+        }
+
         [HttpPost("create")]
         public async Task<IActionResult> Create(CreateBookCommand command)
         {
-            var options = new DistributedCacheEntryOptions();
-
-            //options.SetAbsoluteExpiration(System.DateTimeOffset.Now.AddSeconds(60));
-
-            var value = await cache.Get<CreateBookCommand>("key01");
-
-            await cache.Set("key01", command, options);
-
-
             return await SendAsync(command, HttpStatusCode.Created);
         }
 

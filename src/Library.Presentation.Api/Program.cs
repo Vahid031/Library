@@ -43,6 +43,7 @@ namespace Library.Presentation.Api
                    .ConfigureWebHostDefaults(webBuilder =>
                    {
                        webBuilder.UseStartup<Startup>()
+                        .UseKestrel(options => { options.Limits.MaxRequestBodySize = null; })
                         .CaptureStartupErrors(true)
                         .ConfigureAppConfiguration(config =>
                         {
