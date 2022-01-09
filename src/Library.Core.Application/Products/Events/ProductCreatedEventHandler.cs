@@ -1,13 +1,13 @@
-﻿using Library.Core.Domain.Products.Events;
+﻿using Library.Core.Domain.Books.Events;
 using Lipar.Core.Application.Events;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Library.Core.Application.Products.Events
+namespace Library.Core.Application.Books.Events
 {
-    public class ProductCreatedEventHandler : IEventHandler<ProductCreated>
+    public class BookCreatedEventHandler : IEventHandler<BookCreated>
     {
-        public Task Handle(ProductCreated @event, CancellationToken cancellationToken)
+        public Task Handle(BookCreated @event, CancellationToken cancellationToken)
         {
             return Task.CompletedTask;
         }

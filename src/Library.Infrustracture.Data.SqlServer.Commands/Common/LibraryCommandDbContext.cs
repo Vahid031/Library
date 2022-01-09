@@ -1,4 +1,5 @@
-﻿using Lipar.Infrastructure.Data.SqlServer.Commands;
+﻿using Library.Core.Domain.Books.Entities;
+using Lipar.Infrastructure.Data.SqlServer.Commands;
 using Microsoft.EntityFrameworkCore;
 
 namespace Library.Infrustracture.Data.SqlServer.Commands.Common
@@ -21,6 +22,6 @@ namespace Library.Infrustracture.Data.SqlServer.Commands.Common
             base.OnConfiguring(optionsBuilder);
         }
 
-        //DbSet<Product> Products { get; set; }
+        DbSet<Book> Books { get; set; }
     }
 }

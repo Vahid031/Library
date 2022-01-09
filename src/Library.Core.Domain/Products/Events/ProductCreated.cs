@@ -1,16 +1,16 @@
 ﻿using Lipar.Core.Domain.Events;
 
-namespace Library.Core.Domain.Products.Events
+namespace Library.Core.Domain.Books.Events
 {
-    public class ProductCreated : IEvent
+    public class BookCreated : IEvent
     {
         public string Id { get; }
         public string Name { get; }
         public string Barcode { get; }
 
-        private ProductCreated() { }
+        private BookCreated() { }
 
-        public ProductCreated(string id, string name, string barcode)
+        public BookCreated(string id, string name, string barcode)
         {
             Id = id;
             Name = name;
