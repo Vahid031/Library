@@ -6,14 +6,13 @@
 
   <ItemGroup>
     <PackageReference Include="DocumentFormat.OpenXml" Version="2.15.0" />
-    <PackageReference Include="EPPlus" Version="5.8.4" />
-    <PackageReference Include="ExcelDataReader" Version="3.6.0" />
     <PackageReference Include="Lipar.Core.Application" Version="5.0.11" />
     <PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.13" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Library.Core.Domain\Library.Core.Domain.csproj" />
+    <ProjectReference Include="..\Library.Infrustracture.Tools.Cache.Redis\Library.Infrustracture.Tools.Cache.Redis.csproj" />
   </ItemGroup>
 
 </Project>

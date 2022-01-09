@@ -40,7 +40,7 @@ namespace Library.Core.Application.Books.Commands
                     .MinimumLength(7);
 
                 RuleFor(m => m.Barcode)
-                    .Must(m => int.TryParse(m, out int s));
+                    .Must(m => uint.TryParse(m, out uint s));
             }
         }
     }

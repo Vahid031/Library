@@ -19,25 +19,11 @@ namespace Library.Presentation.Api.Books
     [Route("api/[controller]")]
     public class BookController : BaseController
     {
-        private readonly ILogger<BookController> logger;
-        private readonly IJson json;
-        private readonly ICacheProvider cache;
-        private readonly IHostingEnvironment env;
-
-        public BookController(ILogger<BookController> logger, IJson json, ICacheProvider cache, IHostingEnvironment env)
-        {
-            this.logger = logger;
-            this.json = json;
-            this.cache = cache;
-            this.env = env;
-        }
 
         [HttpGet("sampleFile")]
         public async Task<IActionResult> SampleFile([FromQuery] SampleFileQuery query)
         {
-            Stream memoryStream = await mediator.Send(query);
-
-            return new FileStreamResult(memoryStream, "application/octet-stream")
+            return new FileStreamResult(await mediator.Send(query), "application/octet-stream")
             {
                 FileDownloadName = "Sample.xlsx"
             };

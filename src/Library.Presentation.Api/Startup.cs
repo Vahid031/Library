@@ -10,7 +10,6 @@ using Library.Infrustracture.Data.SqlServer.Queries.Common;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Caching.Distributed;
 using Library.Infrustracture.Tools.Cache.Redis;
-using StackExchange.Redis;
 
 namespace Library.Presentation.Api
 {
@@ -35,13 +34,13 @@ namespace Library.Presentation.Api
 
             services.AddStackExchangeRedisCache(options =>
             {
-                options.Configuration = "127.0.0.1:6379";
+                options.Configuration = Configuration.GetConnectionString("CacheConnectionString");
                 options.InstanceName = "master";
             });
 
             services.Add(ServiceDescriptor.Singleton<IDistributedCache, RedisCache>());
 
-            services.AddTransient<ICacheProvider, CacheProvider>();
+            services.AddScoped<ICacheProvider, CacheProvider>();
         }
 
 
