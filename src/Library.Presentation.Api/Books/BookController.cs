@@ -1,17 +1,17 @@
-﻿using Lipar.Infrastructure.Tools.Utilities.Services;
-using Lipar.Presentation.Api.Controllers;
+﻿using Lipar.Presentation.Api.Controllers;
 using Library.Core.Application.Books.Commands;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Threading.Tasks;
-using Library.Infrustracture.Tools.Cache.Redis;
 using Library.Core.Application.Books.Queries;
-using System.IO.Compression;
-using System.IO;
 using System;
-using Microsoft.AspNetCore.Hosting;
-using System.Linq;
+using System.Diagnostics;
+using Hangfire;
+using Library.Infrustracture.Tools.Cache.Redis;
+using Lipar.Infrastructure.Tools.Utilities.Services;
+using System.Collections.Generic;
+using Library.Core.Domain.Books.Models;
 
 namespace Library.Presentation.Api.Books
 {
@@ -19,7 +19,18 @@ namespace Library.Presentation.Api.Books
     [Route("api/[controller]")]
     public class BookController : BaseController
     {
+        private readonly ILogger<BookController> logger;
+        private readonly ICacheProvider cache;
+        private readonly IUserInfo user;
+        private readonly IBackgroundJobClient backgroundJob;
 
+        public BookController(ILogger<BookController> logger, ICacheProvider cache, IUserInfo user, IBackgroundJobClient backgroundJob)
+        {
+            this.logger = logger;
+            this.cache = cache;
+            this.user = user;
+            this.backgroundJob = backgroundJob;
+        }
         [HttpGet("sampleFile")]
         public async Task<IActionResult> SampleFile([FromQuery] SampleFileQuery query)
         {
@@ -33,7 +44,18 @@ namespace Library.Presentation.Api.Books
         [Consumes("multipart/form-data")]
         public async Task<IActionResult> Upload([FromForm] UploadBookCommand command)
         {
-            return await SendAsync(command, HttpStatusCode.Created);
+            var sw = Stopwatch.StartNew();
+
+            command.Key = DateTime.UtcNow.ToString($"yyyyMMddHHmmss");
+
+            var result = await SendAsync(command, HttpStatusCode.Created);
+
+            sw.Stop();
+            logger.LogInformation($"Upload data finished at {sw.ElapsedMilliseconds / 1000} seconds");
+
+
+            return await SendAsync(new CreateBulkBookCommand { Key = command.Key });
+            //return result;
         }
 
         [HttpPost("create")]

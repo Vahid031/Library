@@ -10,6 +10,7 @@ using Library.Infrustracture.Data.SqlServer.Queries.Common;
 using Microsoft.Extensions.Caching.StackExchangeRedis;
 using Microsoft.Extensions.Caching.Distributed;
 using Library.Infrustracture.Tools.Cache.Redis;
+using Hangfire;
 
 namespace Library.Presentation.Api
 {
@@ -35,18 +36,24 @@ namespace Library.Presentation.Api
             services.AddStackExchangeRedisCache(options =>
             {
                 options.Configuration = Configuration.GetConnectionString("CacheConnectionString");
-                options.InstanceName = "master";
+                options.InstanceName = "";
             });
 
-            services.Add(ServiceDescriptor.Singleton<IDistributedCache, RedisCache>());
+            services.Add(ServiceDescriptor.Transient<IDistributedCache, RedisCache>());
 
-            services.AddScoped<ICacheProvider, CacheProvider>();
+            services.AddTransient<ICacheProvider, CacheProvider>();
+
+            services.AddHangfireServer();
+            services.AddHangfire(x => x.UseSqlServerStorage(Configuration.GetConnectionString("QueryConnectionString")));
+
+            services.AddHostedService<RecurringJobService>();
         }
 
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env, LiparOptions liparOptions)
         {
             app.AddLiparConfiguration(env, liparOptions);
+            app.UseHangfireDashboard("/hangfire");
         }
     }
 }
