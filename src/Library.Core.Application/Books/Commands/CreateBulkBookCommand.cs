@@ -28,7 +28,8 @@ namespace Library.Core.Application.Books.Commands
 
             public async Task Handle(CreateBulkBookCommand request, CancellationToken cancellationToken = default)
             {
-                var books = await cache.Get<List<BookDto>>(request.Key);
+                var books = new List<BookDto>();
+                books.AddRange(await cache.Get<List<BookDto>>(request.Key));
 
                 foreach (var book in books)
                 {
