@@ -17,7 +17,7 @@ namespace Library.Core.Application.Books.Commands
 {
     public class UploadBookCommand : IRequest
     {
-        public string Key { get { return Key; } set { Key = DateTime.UtcNow.ToString($"yyyyMMddHHmmss"); } }
+        public string Key { get; set; }
         public IFormFile File { get; set; }
 
         public class UploadBookCommandHandler : IRequestHandler<UploadBookCommand>

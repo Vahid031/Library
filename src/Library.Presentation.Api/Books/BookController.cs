@@ -46,6 +46,8 @@ namespace Library.Presentation.Api.Books
         {
             var sw = Stopwatch.StartNew();
 
+            command.Key = DateTime.UtcNow.ToString($"yyyyMMddHHmmss");
+
             var result = await SendAsync(command, HttpStatusCode.Created);
 
             sw.Stop();
