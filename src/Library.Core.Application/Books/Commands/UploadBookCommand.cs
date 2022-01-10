@@ -67,15 +67,22 @@ namespace Library.Core.Application.Books.Commands
 
                             worksheet.GetFirstChild<SheetData>().RemoveChild(worksheet.GetFirstChild<SheetData>().GetFirstChild<Row>());
 
-                            var result = Parallel.ForEach(rows, row =>
+                            foreach (var row in rows)
                             {
                                 var cells = row.Elements<Cell>().ToList();
 
                                 books.Add(new BookDto { Name = cells[0].CellValue.Text, Barcode = cells[1].CellValue.Text });
+                            }
 
-                            });
+                            //var result = Parallel.ForEach(rows, row =>
+                            //{
+                            //    var cells = row.Elements<Cell>().ToList();
 
-                            if (result.IsCompleted)
+                            //    books.Add(new BookDto { Name = cells[0].CellValue.Text, Barcode = cells[1].CellValue.Text });
+
+                            //});
+
+                            //if (result.IsCompleted)
                             {
                                 await cache.Set(request.Key, books, cacheOptions);
                             }

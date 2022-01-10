@@ -12,6 +12,9 @@ using Library.Infrustracture.Tools.Cache.Redis;
 using Lipar.Infrastructure.Tools.Utilities.Services;
 using System.Collections.Generic;
 using Library.Core.Domain.Books.Models;
+using Lipar.Core.Application.Common;
+using System.Threading;
+using static Library.Core.Application.Books.Commands.CreateBulkBookCommand;
 
 namespace Library.Presentation.Api.Books
 {
@@ -53,9 +56,10 @@ namespace Library.Presentation.Api.Books
             sw.Stop();
             logger.LogInformation($"Upload data finished at {sw.ElapsedMilliseconds / 1000} seconds");
 
+            backgroundJob.Enqueue<CreateBulkBookCommandHandler>(m => 
+                m.Handle(new CreateBulkBookCommand { Key = command.Key }, default(CancellationToken)));
 
-            return await SendAsync(new CreateBulkBookCommand { Key = command.Key });
-            //return result;
+            return result;
         }
 
         [HttpPost("create")]
@@ -63,7 +67,6 @@ namespace Library.Presentation.Api.Books
         {
             return await SendAsync(command, HttpStatusCode.Created);
         }
-
     }
 
 
