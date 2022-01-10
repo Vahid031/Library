@@ -1,13 +1,9 @@
 ﻿using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using FluentValidation;
-using Library.Core.Domain.Books.Entities;
-using Library.Core.Domain.Books.Events;
 using Library.Core.Domain.Books.Models;
-using Library.Core.Domain.Books.Repositories;
 using Library.Infrustracture.Tools.Cache.Redis;
 using Lipar.Core.Application.Common;
-using Lipar.Infrastructure.Tools.Utilities.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using System;
@@ -21,82 +17,57 @@ namespace Library.Core.Application.Books.Commands
 {
     public class UploadBookCommand : IRequest
     {
-        public string Key { get; set; }
+        public string Key { get { return Key; } set { Key = DateTime.UtcNow.ToString($"yyyyMMddHHmmss"); } }
         public IFormFile File { get; set; }
 
         public class UploadBookCommandHandler : IRequestHandler<UploadBookCommand>
         {
-            private readonly IBookCommandRepository repository;
-            private readonly ICacheProvider cache;
-            private readonly IJson json;
+            private readonly ICacheProvider _cache;
 
-            public UploadBookCommandHandler(IBookCommandRepository repository, ICacheProvider cache, IJson json)
+            public UploadBookCommandHandler(ICacheProvider cache)
             {
-                this.repository = repository;
-                this.cache = cache;
-                this.json = json;
+                _cache = cache;
             }
 
             public async Task Handle(UploadBookCommand request, CancellationToken cancellationToken = default)
             {
+                var cacheOptions = new DistributedCacheEntryOptions();
+                var books = ExelTolist(request.File);
+                await _cache.Set(request.Key, books, cacheOptions);
+            }
+        }
 
-                List<BookDto> books = new List<BookDto>();
+        static List<BookDto> ExelTolist(IFormFile file)
+        {
+            List<BookDto> books = new List<BookDto>();
 
-                using (var stream = new MemoryStream())
+            using (var stream = new MemoryStream())
+            {
+                file.CopyTo(stream);
+                stream.Position = 0;
+
+
+                using (var document = SpreadsheetDocument.Open(stream, true))
                 {
-                    request.File.CopyTo(stream);
-                    stream.Position = 0;
-
-                    var cacheOptions = new DistributedCacheEntryOptions();
-
-                    using (var document = SpreadsheetDocument.Open(stream, true))
+                    foreach (var wp in document.WorkbookPart.WorksheetParts)
                     {
+                        Worksheet worksheet = wp.Worksheet;
 
-                        foreach (var wp in document.WorkbookPart.WorksheetParts)
+                        var rows = worksheet.GetFirstChild<SheetData>().Elements<Row>();
+
+                        worksheet.GetFirstChild<SheetData>().RemoveChild(worksheet.GetFirstChild<SheetData>().GetFirstChild<Row>());
+
+                        foreach (var row in rows)
                         {
-                            Worksheet worksheet = wp.Worksheet;
+                            var cells = row.Elements<Cell>().ToList();
 
-                            var rows = worksheet.GetFirstChild<SheetData>().Elements<Row>();
-
-                            //Dictionary<string, string> dic = new Dictionary<string, string>();
-
-                            //foreach (var cell in worksheet.GetFirstChild<SheetData>().GetFirstChild<Row>())
-                            //{
-                            //    dic.Add(cell.CellValue.Text);
-                            //}
-
-                            worksheet.GetFirstChild<SheetData>().RemoveChild(worksheet.GetFirstChild<SheetData>().GetFirstChild<Row>());
-
-                            foreach (var row in rows)
-                            {
-                                var cells = row.Elements<Cell>().ToList();
-
-                                books.Add(new BookDto { Name = cells[0].CellValue.Text, Barcode = cells[1].CellValue.Text });
-                            }
-
-                            //var result = Parallel.ForEach(rows, row =>
-                            //{
-                            //    var cells = row.Elements<Cell>().ToList();
-
-                            //    books.Add(new BookDto { Name = cells[0].CellValue.Text, Barcode = cells[1].CellValue.Text });
-
-                            //});
-
-                            //if (result.IsCompleted)
-                            {
-                                await cache.Set(request.Key, books, cacheOptions);
-                            }
+                            books.Add(new BookDto { Name = cells[0].CellValue.Text, Barcode = cells[1].CellValue.Text });
                         }
-
-                        document.Close();
                     }
-
+                    document.Close();
                 }
 
-                //var entity = new Book(Guid.NewGuid(), request.Name, request.Barcode);
-
-                //await repository.InsertAsync(entity);
-                //await repository.CommitAsync();
+                return books;
             }
         }
 

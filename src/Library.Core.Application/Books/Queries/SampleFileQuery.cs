@@ -1,16 +1,10 @@
 ﻿using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-using FluentValidation;
-using Library.Core.Domain.Books.Entities;
 using Library.Core.Domain.Books.Models;
-using Library.Core.Domain.Books.Repositories;
 using Lipar.Core.Application.Common;
-using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -27,8 +21,6 @@ namespace Library.Core.Application.Books.Queries
                 return Task.FromResult(WriteExcelFile(request.RowCount));
             }
         }
-
-
 
         static Stream WriteExcelFile(uint rowCount)
         {
@@ -79,10 +71,8 @@ namespace Library.Core.Application.Books.Queries
                     sheetData.AppendChild(row);
                 }
 
-                //workbookPart.Workbook.Save();
                 document.Save();
                 document.Close();
-
             }
 
             stream.Position = 0;

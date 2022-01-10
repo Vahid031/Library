@@ -15,19 +15,19 @@ namespace Library.Core.Application.Books.Commands
 
         public class CreateBookCommandHandler : IRequestHandler<CreateBookCommand>
         {
-            private readonly IBookCommandRepository repository;
+            private readonly IBookCommandRepository _repository;
 
             public CreateBookCommandHandler(IBookCommandRepository repository)
             {
-                this.repository = repository;
+                _repository = repository;
             }
 
             public async Task Handle(CreateBookCommand request, CancellationToken cancellationToken = default)
             {
                 var entity = new Book(Guid.NewGuid(), request.Name, request.Barcode);
 
-                await repository.InsertAsync(entity);
-                await repository.CommitAsync();
+                await _repository.InsertAsync(entity);
+                await _repository.CommitAsync();
             }
         }
 
