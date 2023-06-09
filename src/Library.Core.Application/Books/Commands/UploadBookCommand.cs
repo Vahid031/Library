@@ -3,7 +3,7 @@ using DocumentFormat.OpenXml.Spreadsheet;
 using FluentValidation;
 using Library.Core.Domain.Books.Models;
 using Library.Infrustracture.Tools.Cache.Redis;
-using Lipar.Core.Application.Common;
+using Lipar.Core.Contract.Common;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Caching.Distributed;
 using System;
@@ -13,7 +13,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Library.Core.Application.Books.Commands
+namespace Library.Core.Contract.Books.Commands
 {
     public class UploadBookCommand : IRequest
     {

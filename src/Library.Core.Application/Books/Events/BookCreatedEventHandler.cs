@@ -1,5 +1,5 @@
 ﻿using Library.Core.Domain.Books.Events;
-using Lipar.Core.Application.Events;
+using Lipar.Core.Contract.Events;
 using System.Threading;
 using System.Threading.Tasks;
 

@@ -2,13 +2,13 @@
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
 using Library.Core.Domain.Books.Models;
-using Lipar.Core.Application.Common;
+using Lipar.Core.Contract.Common;
 using System;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace Library.Core.Application.Books.Queries
+namespace Library.Core.Contract.Books.Queries
 {
     public class SampleFileQuery : IRequest<Stream>
     {

@@ -1,4 +1,4 @@
-﻿using Lipar.Core.Domain.Data;
+﻿using Lipar.Core.Contract.Data;
 
 namespace Library.Core.Domain.Books.Repositories
 {

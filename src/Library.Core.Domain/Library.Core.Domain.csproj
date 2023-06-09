@@ -1,11 +1,12 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>net5.0</TargetFramework>
+    <TargetFramework>net6.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Lipar.Core.Domain" Version="5.0.11" />
+    <PackageReference Include="Lipar.Core.Contract" Version="6.1.0" />
+    <PackageReference Include="Lipar.Core.Domain" Version="6.1.0" />
   </ItemGroup>
 
 </Project>

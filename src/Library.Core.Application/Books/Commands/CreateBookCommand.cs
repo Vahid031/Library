@@ -1,7 +1,7 @@
 ﻿using FluentValidation;
 using Library.Core.Domain.Books.Entities;
 using Library.Core.Domain.Books.Repositories;
-using Lipar.Core.Application.Common;
+using Lipar.Core.Contract.Common;
 using System;
 using System.Threading;
 using System.Threading.Tasks;

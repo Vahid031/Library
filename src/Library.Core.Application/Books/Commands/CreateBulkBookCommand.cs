@@ -2,7 +2,7 @@
 using Library.Core.Domain.Books.Models;
 using Library.Core.Domain.Books.Repositories;
 using Library.Infrustracture.Tools.Cache.Redis;
-using Lipar.Core.Application.Common;
+using Lipar.Core.Contract.Common;
 using System;
 using System.Collections.Generic;
 using System.Threading;

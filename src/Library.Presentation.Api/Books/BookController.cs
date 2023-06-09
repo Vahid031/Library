@@ -4,13 +4,14 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Threading.Tasks;
-using Library.Core.Application.Books.Queries;
 using System;
 using System.Diagnostics;
 using Hangfire;
 using Library.Infrustracture.Tools.Cache.Redis;
-using Lipar.Infrastructure.Tools.Utilities.Services;
 using System.Threading;
+using Lipar.Core.Contract.Services;
+using Library.Core.Contract.Books.Queries;
+using Library.Core.Contract.Books.Commands;
 using static Library.Core.Application.Books.Commands.CreateBulkBookCommand;
 
 namespace Library.Presentation.Api.Books
@@ -21,10 +22,10 @@ namespace Library.Presentation.Api.Books
     {
         private readonly ILogger<BookController> logger;
         private readonly ICacheProvider cache;
-        private readonly IUserInfo user;
+        private readonly IUserInfoService user;
         private readonly IBackgroundJobClient backgroundJob;
 
-        public BookController(ILogger<BookController> logger, ICacheProvider cache, IUserInfo user, IBackgroundJobClient backgroundJob)
+        public BookController(ILogger<BookController> logger, ICacheProvider cache, IUserInfoService user, IBackgroundJobClient backgroundJob)
         {
             this.logger = logger;
             this.cache = cache;

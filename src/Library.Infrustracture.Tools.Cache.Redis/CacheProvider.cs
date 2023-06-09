@@ -1,4 +1,4 @@
-﻿using Lipar.Infrastructure.Tools.Utilities.Services;
+﻿using Lipar.Core.Contract.Services;
 using Microsoft.Extensions.Caching.Distributed;
 using System.Threading.Tasks;
 
@@ -7,9 +7,9 @@ namespace Library.Infrustracture.Tools.Cache.Redis
     public class CacheProvider : ICacheProvider 
     {
         private readonly IDistributedCache _cache;
-        private readonly IJson _json;
+        private readonly IJsonService _json;
 
-        public CacheProvider(IDistributedCache cache, IJson json)
+        public CacheProvider(IDistributedCache cache, IJsonService json)
         {
             _cache = cache;
             _json = json;

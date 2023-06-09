@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.Logging;
 using Hangfire.Server;
 using Microsoft.Extensions.Hosting;
-using Lipar.Core.Application.Common;
+using Lipar.Core.Contract.Common;
 
 namespace Library.Presentation.Api
 {
